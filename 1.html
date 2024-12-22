@@ -3,11 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Safety Checker</title>
+    <title>URL Safety Checker with Rapid Color Changes</title>
     <style>
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            25% {
+                background-position: 100% 50%;
+            }
+            50% {
+                background-position: 0% 50%;
+            }
+            75% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: white;
             color: #333;
             display: flex;
             justify-content: center;
@@ -16,14 +33,18 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
+            background: linear-gradient(-45deg, #ff6b6b, #4ecdc4, #45b7d1, #f7797d, #fbd786, #c6ffdd);
+            background-size: 400% 400%;
+            animation: gradient 8s ease infinite;
         }
         .container {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.8);
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 500px;
+            backdrop-filter: blur(10px);
         }
         h1 {
             color: #4a5568;
@@ -67,11 +88,11 @@
             display: none;
         }
         .safe {
-            background-color: #c6f6d5;
+            background-color: rgba(198, 246, 213, 0.8);
             color: #2f855a;
         }
         .unsafe {
-            background-color: #fed7d7;
+            background-color: rgba(254, 215, 215, 0.8);
             color: #c53030;
         }
         #loading {
@@ -287,16 +308,16 @@
                         isSafe = false;
                     }
 
-                  // Display results
-                  if (isSafe) {
+                    // Display results
+                    if (isSafe) {
                         resultDiv.innerHTML = "✅ The URL is safe to visit";
                         resultDiv.className = "result safe";
                     } else {
-                        resultDiv.innerHTML = "❌The URL is not safe to visit";
+                        resultDiv.innerHTML = "❌ The URL is not safe to visit";
                         resultDiv.className = "result unsafe";
                     }
                 } catch (e) {
-                    resultDiv.innerHTML = "❌The URL is not safe to visit";
+                    resultDiv.innerHTML = "❌ The URL is not safe to visit";
                     resultDiv.className = "result unsafe";
                 }
 
