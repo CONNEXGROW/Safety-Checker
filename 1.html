@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Safety Checker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: white;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #4a5568;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #5a67d8;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 16px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .safe {
+            background-color: #c6f6d5;
+            color: #2f855a;
+        }
+        .unsafe {
+            background-color: #fed7d7;
+            color: #c53030;
+        }
+        #loading {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            height: 120px;
+            overflow: hidden;
+        }
+        .earth {
+            width: 80px;
+            height: 80px;
+            background-color: #4299e1;
+            border-radius: 50%;
+            position: relative;
+            display: none;
+            animation: run 1s infinite linear;
+        }
+        .earth::after {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background-color: #68d391;
+            border-radius: 50%;
+            top: 35px;
+            left: 25px;
+        }
+        .earth::before {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: #68d391;
+            border-radius: 50%;
+            bottom: 15px;
+            right: 15px;
+        }
+        .earth .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: face-bounce 0.5s infinite alternate;
+        }
+        .earth .eye {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #2d3748;
+            border-radius: 50%;
+            top: 20px;
+        }
+        .earth .eye.left {
+            left: 22px;
+        }
+        .earth .eye.right {
+            right: 22px;
+        }
+        .earth .eye::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+        }
+        .earth .mouth {
+            position: absolute;
+            width: 30px;
+            height: 15px;
+            border: 3px solid #2d3748;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            border-top: none;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .earth .leg {
+            position: absolute;
+            width: 3px;
+            height: 20px;
+            background-color: #2d3748;
+            bottom: -18px;
+        }
+        .earth .leg.left {
+            left: 30px;
+            animation: leg-swing-left 0.5s infinite alternate;
+        }
+        .earth .leg.right {
+            right: 30px;
+            animation: leg-swing-right 0.5s infinite alternate;
+        }
+        .earth .hand {
+            position: absolute;
+            width: 3px;
+            height: 20px;
+            background-color: #2d3748;
+            top: 35px;
+        }
+        .earth .hand.left {
+            left: -5px;
+            animation: hand-swing-left 0.5s infinite alternate;
+        }
+        .earth .hand.right {
+            right: -5px;
+            animation: hand-swing-right 0.5s infinite alternate;
+        }
+        @keyframes run {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+        @keyframes face-bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-2px); }
+        }
+        @keyframes leg-swing-left {
+            0% { transform: rotate(-30deg); }
+            100% { transform: rotate(30deg); }
+        }
+        @keyframes leg-swing-right {
+            0% { transform: rotate(30deg); }
+            100% { transform: rotate(-30deg); }
+        }
+        @keyframes hand-swing-left {
+            0% { transform: rotate(30deg); }
+            100% { transform: rotate(-30deg); }
+        }
+        @keyframes hand-swing-right {
+            0% { transform: rotate(-30deg); }
+            100% { transform: rotate(30deg); }
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            input[type="text"], button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL Safety Checker</h1>
+        <input type="text" id="urlInput" placeholder="Enter a URL (e.g., https://example.com)">
+        <button onclick="checkSafety()">Check Safety</button>
+        <div id="loading">
+            <div class="earth">
+                <div class="face">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="mouth"></div>
+                </div>
+                <div class="leg left"></div>
+                <div class="leg right"></div>
+                <div class="hand left"></div>
+                <div class="hand right"></div>
+            </div>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function checkSafety() {
+            const urlInput = document.getElementById("urlInput").value;
+            const resultDiv = document.getElementById("result");
+            const loadingDiv = document.getElementById("loading");
+            const earth = document.querySelector(".earth");
+
+            if (!urlInput) {
+                alert("Please enter a URL.");
+                return;
+            }
+
+            // Show loading animation
+            loadingDiv.style.display = "flex";
+            earth.style.display = "block";
+            resultDiv.style.display = "none";
+
+            // Simulate API call delay
+            setTimeout(() => {
+                try {
+                    const url = new URL(urlInput);
+                    let resultMessage = "";
+                    let isSafe = true;
+
+                    // Check if the URL uses HTTPS
+                    if (url.protocol !== "https:") {
+                        resultMessage += "❌ The URL does not use HTTPS (SSL certificate missing).<br>";
+                        isSafe = false;
+                    } else {
+                        resultMessage += "✅ The URL uses HTTPS (SSL certificate is present).<br>";
+                    }
+
+                    // Check for suspicious patterns
+                    if (url.hostname.includes("-")) {
+                        resultMessage += "❌ The domain contains a hyphen, which can be suspicious.<br>";
+                        isSafe = false;
+                    }
+                    if (url.hostname.length > 60) {
+                        resultMessage += "❌ The domain name is unusually long, which can be suspicious.<br>";
+                        isSafe = false;
+                    }
+
+                  // Display results
+                  if (isSafe) {
+                        resultDiv.innerHTML = "✅ The URL is safe to visit";
+                        resultDiv.className = "result safe";
+                    } else {
+                        resultDiv.innerHTML = "❌The URL is not safe to visit";
+                        resultDiv.className = "result unsafe";
+                    }
+                } catch (e) {
+                    resultDiv.innerHTML = "❌The URL is not safe to visit";
+                    resultDiv.className = "result unsafe";
+                }
+
+                // Hide loading animation and show result
+                loadingDiv.style.display = "none";
+                earth.style.display = "none";
+                resultDiv.style.display = "block";
+            }, 2000); // 2 second delay to simulate processing
+        }
+
+        document.getElementById("urlInput").addEventListener("input", function () {
+            const resultDiv = document.getElementById("result");
+            resultDiv.style.display = "none";
+        });
+    </script>
+</body>
+</html>
+
