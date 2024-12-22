@@ -272,24 +272,31 @@
             const resultDiv = document.getElementById("result");
             const loadingDiv = document.getElementById("loading");
             const earth = document.querySelector(".earth");
-
+    
             if (!urlInput) {
                 alert("Please enter a URL.");
                 return;
             }
-
+    
+            // Ensure only valid URLs are entered
+            const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})([\/\w.-]*)*\/?$/;
+            if (!urlPattern.test(urlInput)) {
+                alert("Please enter a valid URL.");
+                return;
+            }
+    
             // Show loading animation
             loadingDiv.style.display = "flex";
             earth.style.display = "block";
             resultDiv.style.display = "none";
-
+    
             // Simulate API call delay
             setTimeout(() => {
                 try {
                     const url = new URL(urlInput);
                     let resultMessage = "";
                     let isSafe = true;
-
+    
                     // Check if the URL uses HTTPS
                     if (url.protocol !== "https:") {
                         resultMessage += "❌ The URL does not use HTTPS (SSL certificate missing).<br>";
@@ -297,7 +304,7 @@
                     } else {
                         resultMessage += "✅ The URL uses HTTPS (SSL certificate is present).<br>";
                     }
-
+    
                     // Check for suspicious patterns
                     if (url.hostname.includes("-")) {
                         resultMessage += "❌ The domain contains a hyphen, which can be suspicious.<br>";
@@ -307,7 +314,7 @@
                         resultMessage += "❌ The domain name is unusually long, which can be suspicious.<br>";
                         isSafe = false;
                     }
-
+    
                     // Display results
                     if (isSafe) {
                         resultDiv.innerHTML = "✅ The URL is safe to visit";
@@ -320,19 +327,20 @@
                     resultDiv.innerHTML = "❌ The URL is not safe to visit";
                     resultDiv.className = "result unsafe";
                 }
-
+    
                 // Hide loading animation and show result
                 loadingDiv.style.display = "none";
                 earth.style.display = "none";
                 resultDiv.style.display = "block";
             }, 2000); // 2 second delay to simulate processing
         }
-
+    
         document.getElementById("urlInput").addEventListener("input", function () {
             const resultDiv = document.getElementById("result");
             resultDiv.style.display = "none";
         });
     </script>
+    
 </body>
 </html>
 
