@@ -1,104 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safety Checker</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        :root {
-            --primary-color: #4a4e69;
-            --secondary-color: #9a8c98;
-            --background-color: #f2e9e4;
-            --text-color: #22223b;
-            --button-hover-color: #c9ada7;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Safety Checker</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: var(--background-color);
-            background-image: radial-gradient(var(--secondary-color) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .container {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 90%;
-            width: 400px;
-            transition: transform 0.3s ease;
-        }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow: hidden;
+    }
 
-        .container:hover {
-            transform: translateY(-5px);
-        }
+    .container {
+      max-width: 400px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
 
-        h1 {
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            font-weight: 600;
-        }
+    h1 {
+      color: #4a5568;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 28px;
+    }
 
-        .button-container {
-            display: grid;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 48px;
+    }
 
-        .button {
-            display: inline-block;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #fff;
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 2px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
 
-        .button:hover {
-            background-color: var(--button-hover-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
 
-        @media (max-width: 480px) {
-            .container {
-                padding: 1.5rem;
-            }
+    button {
+      width: 100%;
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s ease, transform 0.1s ease;
+    }
 
-            h1 {
-                font-size: 2rem;
-            }
+    button:hover {
+      background: #5a67d8;
+    }
 
-            .button {
-                padding: 0.8rem 1.2rem;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .safe {
+      background-color: #c6f6d5;
+      color: #2f855a;
+    }
+
+    .unsafe {
+      background-color: #fed7d7;
+      color: #c53030;
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      height: 100px;
+    }
+
+    .jumping-email {
+      font-size: 40px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .jumping-email .face {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20px;
+    }
+
+    .jumping-email .hand-left,
+    .jumping-email .hand-right {
+      position: absolute;
+      bottom: -10px;
+      font-size: 20px;
+    }
+
+    .jumping-email .hand-left {
+      left: 0;
+      transform: rotate(-30deg);
+    }
+
+    .jumping-email .hand-right {
+      right: 0;
+      transform: rotate(30deg);
+    }
+
+    @keyframes jump {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes wave {
+      0%, 100% { transform: rotate(-30deg); }
+      50% { transform: rotate(-45deg); }
+    }
+
+    .jumping {
+      animation: jump 0.5s infinite;
+    }
+
+    .jumping .hand-left {
+      animation: wave 0.5s infinite;
+    }
+
+    .jumping .hand-right {
+      animation: wave 0.5s infinite reverse;
+    }
+
+    .background-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: float 4s infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      input, button {
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Safety Checker</h1>
-        <div class="button-container">
-            <a href="1.html" class="button">Email Safety Checker</a>
-            <a href="emaill.html" class="button">URL Safety Checker</a>
-        </div>
+  <div class="background-animation" id="backgroundAnimation"></div>
+  <div class="container">
+    <div class="logo">✉️</div>
+    <h1>Email Safety Checker</h1>
+    <input type="email" id="email" placeholder="Enter your email" required>
+    <button onclick="checkEmail()">Check Safety</button>
+    <div class="loading" id="loading">
+      <div class="jumping-email" id="jumpingEmail">
+        ✉️
+        <span class="face">😊</span>
+        <span class="hand-left">👋</span>
+        <span class="hand-right">👋</span>
+      </div>
     </div>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    function checkEmail() {
+      const email = document.getElementById("email").value;
+      const resultDiv = document.getElementById("result");
+      const loadingDiv = document.getElementById("loading");
+      const jumpingEmail = document.getElementById("jumpingEmail");
+      
+      const trustedDomains = [
+        "gmail.com", "outlook.com", "live.com", "hotmail.com",
+        "yahoo.com", "icloud.com", "protonmail.com",
+        "zoho.com", "mail.com", "fastmail.com", "tutanota.com",
+        "comcast.net", "att.net", "btinternet.com", "gmx.com",
+        "yandex.com", "163.com", "126.com", "edu", "gov"
+      ];
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      resultDiv.classList.remove("show");
+      loadingDiv.style.display = "flex";
+      jumpingEmail.classList.add("jumping");
+
+      setTimeout(() => {
+        if (!email) {
+          showResult("Please enter an email address.", "unsafe");
+          return;
+        }
+
+        if (!emailRegex.test(email)) {
+          showResult("Invalid email format.", "unsafe");
+          return;
+        }
+
+        const domain = email.split("@")[1];
+        const isTrusted = trustedDomains.some(trustedDomain =>
+          domain.endsWith(trustedDomain)
+        );
+
+        if (isTrusted) {
+          showResult("This email looks safe!", "safe");
+        } else {
+          showResult("This email is not safe.", "unsafe");
+        }
+        jumpingEmail.classList.remove("jumping");
+      }, 2000);
+    }
+
+    function showResult(message, className) {
+      const resultDiv = document.getElementById("result");
+      const loadingDiv = document.getElementById("loading");
+
+      loadingDiv.style.display = "none";
+      resultDiv.textContent = message;
+      resultDiv.className = `result ${className}`;
+      setTimeout(() => {
+        resultDiv.classList.add("show");
+      }, 50);
+    }
+
+    function createBubbles() {
+      const container = document.getElementById('backgroundAnimation');
+      const containerRect = container.getBoundingClientRect();
+
+      for (let i = 0; i < 50; i++) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        
+        const size = Math.random() * 50 + 10;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        
+        bubble.style.left = `${Math.random() * containerRect.width}px`;
+        bubble.style.top = `${Math.random() * containerRect.height}px`;
+        
+        bubble.style.animationDuration = `${Math.random() * 4 + 2}s`;
+        bubble.style.animationDelay = `${Math.random() * 2}s`;
+        
+        container.appendChild(bubble);
+      }
+    }
+
+    window.addEventListener('load', createBubbles);
+  </script>
 </body>
 </html>
