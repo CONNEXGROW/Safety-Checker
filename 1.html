@@ -290,12 +290,10 @@
         }
     </style>
 </head>
-<body>
-    <button class="back-button" onclick="goBack()">
-        <span class="arrow">&#8592;</span>
-        <span class="text">Back</span>
-    </button>
-
+<button class="back-button" onclick="visitURL('index.html')">
+    <span class="arrow">&#8592;</span>
+    <span class="text">Back</span>
+</button>
     <div class="container">
         <h1>URL Safety Checker</h1>
         <input type="text" id="urlInput" placeholder="Enter a URL (e.g., https://example.com)">
@@ -390,12 +388,9 @@
             resultDiv.style.display = "none";
         });
 
-        function goBack() {
-            // You can customize this function to navigate back or perform any other action
-            console.log('Back button clicked');
-            // For demonstration, let's just reload the page
-            location.reload();
-        }
+        function visitURL(url) {
+    window.location.href = url;
+}
     </script>
 </body>
 </html>
