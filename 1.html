@@ -3,24 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Safety Checker with Rapid Color Changes</title>
+    <title>URL Safety Checker with Animated Back Button</title>
     <style>
         @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            25% {
-                background-position: 100% 50%;
-            }
-            50% {
-                background-position: 0% 50%;
-            }
-            75% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 0% 50%; }
+            75% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         body {
@@ -205,12 +195,8 @@
             animation: hand-swing-right 0.5s infinite alternate;
         }
         @keyframes run {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
         @keyframes face-bounce {
             0% { transform: translateY(0); }
@@ -243,9 +229,73 @@
                 font-size: 14px;
             }
         }
+
+        /* Animated Back Button Styles */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            width: 100px;
+            border-radius: 25px;
+        }
+
+        .back-button .arrow {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .back-button .text {
+            position: absolute;
+            right: 10px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover .arrow {
+            left: 15px;
+            transform: translateX(0);
+        }
+
+        .back-button:hover .text {
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .back-button:hover .arrow {
+            animation: pulse 1s infinite;
+        }
     </style>
 </head>
 <body>
+    <button class="back-button" onclick="goBack()">
+        <span class="arrow">&#8592;</span>
+        <span class="text">Back</span>
+    </button>
+
     <div class="container">
         <h1>URL Safety Checker</h1>
         <input type="text" id="urlInput" placeholder="Enter a URL (e.g., https://example.com)">
@@ -339,8 +389,14 @@
             const resultDiv = document.getElementById("result");
             resultDiv.style.display = "none";
         });
+
+        function goBack() {
+            // You can customize this function to navigate back or perform any other action
+            console.log('Back button clicked');
+            // For demonstration, let's just reload the page
+            location.reload();
+        }
     </script>
-    
 </body>
 </html>
 
