@@ -198,6 +198,65 @@
       }
     }
 
+    /* Animated Back Button Styles */
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: #aa29a7;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    .back-button:hover {
+      width: 100px;
+      border-radius: 25px;
+    }
+
+    .back-button .arrow {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: all 0.3s ease;
+    }
+
+    .back-button .text {
+      position: absolute;
+      right: 10px;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover .arrow {
+      left: 15px;
+      transform: translateX(0);
+    }
+
+    .back-button:hover .text {
+      opacity: 1;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .back-button:hover .arrow {
+      animation: pulse 1s infinite;
+    }
+
     @media (max-width: 480px) {
       .container {
         padding: 20px;
@@ -214,6 +273,10 @@
   </style>
 </head>
 <body>
+    <button class="back-button" onclick="visitURL('url.html')">
+        <span class="arrow">&#8592;</span>
+        <span class="text">Back</span>
+    </button>
   <div class="background-animation" id="backgroundAnimation"></div>
   <div class="container">
     <div class="logo">✉️</div>
@@ -311,7 +374,10 @@
       }
     }
 
-    window.addEventListener('load', createBubbles);
+    function visitURL(url) {
+    window.location.href = url;
+}
   </script>
 </body>
 </html>
+
